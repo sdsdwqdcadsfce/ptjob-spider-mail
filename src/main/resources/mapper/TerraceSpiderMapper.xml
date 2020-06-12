@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.peait.mapper.TerraceSpiderMapper">
+  <resultMap id="BaseResultMap" type="com.peait.entity.TerraceSpider">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="is_send" jdbcType="TINYINT" property="isSend" />
+    <result column="terrace_name" jdbcType="VARCHAR" property="terraceName" />
+    <result column="project_title" jdbcType="VARCHAR" property="projectTitle" />
+    <result column="project_description" jdbcType="VARCHAR" property="projectDescription" />
+    <result column="project_price" jdbcType="DECIMAL" property="projectPrice" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, is_send, terrace_name, project_title, project_description, project_price
+  </sql>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from terrace_spider
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="selectByTerraceName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from terrace_spider
+    where terrace_name = #{terraceName,jdbcType=VARCHAR}
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from terrace_spider
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.peait.entity.TerraceSpider">
+    insert into terrace_spider (id, is_send, terrace_name, 
+      project_title, project_description, project_price
+      )
+    values (#{id,jdbcType=VARCHAR}, #{isSend,jdbcType=TINYINT}, #{terraceName,jdbcType=VARCHAR}, 
+      #{projectTitle,jdbcType=VARCHAR}, #{projectDescription,jdbcType=VARCHAR}, #{projectPrice,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.peait.entity.TerraceSpider">
+    insert into terrace_spider
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="isSend != null">
+        is_send,
+      </if>
+      <if test="terraceName != null">
+        terrace_name,
+      </if>
+      <if test="projectTitle != null">
+        project_title,
+      </if>
+      <if test="projectDescription != null">
+        project_description,
+      </if>
+      <if test="projectPrice != null">
+        project_price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="isSend != null">
+        #{isSend,jdbcType=TINYINT},
+      </if>
+      <if test="terraceName != null">
+        #{terraceName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectTitle != null">
+        #{projectTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="projectDescription != null">
+        #{projectDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="projectPrice != null">
+        #{projectPrice,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.peait.entity.TerraceSpider">
+    update terrace_spider
+    <set>
+      <if test="isSend != null">
+        is_send = #{isSend,jdbcType=TINYINT},
+      </if>
+      <if test="terraceName != null">
+        terrace_name = #{terraceName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectTitle != null">
+        project_title = #{projectTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="projectDescription != null">
+        project_description = #{projectDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="projectPrice != null">
+        project_price = #{projectPrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.peait.entity.TerraceSpider">
+    update terrace_spider
+    set is_send = #{isSend,jdbcType=TINYINT},
+      terrace_name = #{terraceName,jdbcType=VARCHAR},
+      project_title = #{projectTitle,jdbcType=VARCHAR},
+      project_description = #{projectDescription,jdbcType=VARCHAR},
+      project_price = #{projectPrice,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
