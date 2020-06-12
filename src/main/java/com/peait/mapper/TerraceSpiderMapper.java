@@ -21,4 +21,6 @@ public interface TerraceSpiderMapper {
     int updateByPrimaryKey(TerraceSpider record);
 
     List<TerraceSpider> selectByTerraceName(@Param("terraceName") String mashi);
+
+    List<TerraceSpider> selectBySend();
 }

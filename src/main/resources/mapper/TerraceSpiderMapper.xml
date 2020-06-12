@@ -22,7 +22,14 @@
   </select>
 
 
-  <select id="selectByTerraceName" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectBySend" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from terrace_spider
+    where is_send = 0
+  </select>
+
+  <select id="selectByTerraceName"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from terrace_spider

@@ -1,6 +1,7 @@
 package com.peait.mail;
 
 
+import com.peait.entity.SendMail;
 import com.peait.entity.TerraceSpider;
 import com.peait.mapper.TerraceSpiderMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -13,25 +14,24 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class SendEmail {
+public class SendEmailService {
     @Resource
     private TerraceSpiderMapper terraceSpiderMapper;
 
-    @Scheduled(cron = "0 0/1 * * * ?")
-    private void getEmail(){
+    public void getEmail(){
         log.info("开始发送邮件通知");
         List<TerraceSpider> sendEmailLists = terraceSpiderMapper.selectBySend();
         if(sendEmailLists!=null && sendEmailLists.size()>0){
             try {
-                for (TerraceSpider zhubajie:sendEmailLists) {
+                for (TerraceSpider terraceSpider:sendEmailLists) {
 
-                    String mailbody = zhubajie.getContentDetail()+" "+zhubajie.getsHref();
+                    String mailbody = terraceSpider.getProjectDescription();
 
                     SendMail themail = new SendMail("smtp.163.com");
 
                     themail.setNeedAuth(true);
 
-                    if (themail.setSubject(zhubajie.getTitleValue()+" "+zhubajie.getsHref()) == false){
+                    if (themail.setSubject(terraceSpider.getTerraceName()+terraceSpider.getProjectTitle()) == false){
                         return;
                     }
 
@@ -53,9 +53,8 @@ public class SendEmail {
                     if (themail.sendout() == false){
                         return;
                     }
-                    zhubajie.setIsSend(1);
-                    zhubajieSpiderMapper.updateByPrimaryKey(zhubajie);
-
+                    terraceSpider.setIsSend((byte) 1);
+                    terraceSpiderMapper.updateByPrimaryKey(terraceSpider);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

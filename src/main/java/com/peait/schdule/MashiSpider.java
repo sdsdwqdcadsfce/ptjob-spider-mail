@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.peait.entity.MashiRepo;
 import com.peait.entity.TerraceSpider;
+import com.peait.mail.SendEmailService;
 import com.peait.mapper.TerraceSpiderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,6 +32,9 @@ public class MashiSpider implements PageProcessor {
 
     @Resource
     private TerraceSpiderMapper terraceSpiderMapper;
+
+    @Autowired
+    private SendEmailService sendEmailService;
 
     // 部分一：抓取网站的相关配置，包括编码、抓取间隔、重试次数等
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36").addHeader("accept", "application/json");
@@ -71,7 +75,7 @@ public class MashiSpider implements PageProcessor {
 
             }
         }
-
+        sendEmailService.getEmail();
     }
 
     @Override
@@ -79,7 +83,7 @@ public class MashiSpider implements PageProcessor {
         return site;
     }
 
-//    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void schdule() {
         Spider.create(this)
                 //从"https://github.com/code4craft"开始抓

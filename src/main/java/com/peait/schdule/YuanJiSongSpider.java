@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import com.alibaba.fastjson.JSON;
 import com.peait.entity.MashiRepo;
 import com.peait.entity.TerraceSpider;
+import com.peait.mail.SendEmailService;
 import com.peait.mapper.TerraceSpiderMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import us.codecraft.webmagic.Page;
@@ -30,6 +32,9 @@ public class YuanJiSongSpider implements PageProcessor {
     @Resource
     private TerraceSpiderMapper terraceSpiderMapper;
 
+    @Autowired
+    private SendEmailService sendEmailService;
+
     // 部分一：抓取网站的相关配置，包括编码、抓取间隔、重试次数等
     private Site site = Site.me().setRetryTimes(3).setSleepTime(1000).setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36").addHeader("accept", "application/json");
 
@@ -47,7 +52,7 @@ public class YuanJiSongSpider implements PageProcessor {
             }
         }
         for (int i = 0; i < contentListCOW.size(); i++) {
-            List<TerraceSpider> ysj = terraceSpiderMapper.selectByTerraceName("ysj");
+            List<TerraceSpider> ysj = terraceSpiderMapper.selectByTerraceName("yjs");
             Boolean flag = true;
             if(!ysj.isEmpty()){
                 for (TerraceSpider te:ysj) {
@@ -75,6 +80,8 @@ public class YuanJiSongSpider implements PageProcessor {
                 terraceSpiderMapper.insertSelective(terraceSpider);
             }
         }
+
+        sendEmailService.getEmail();
     }
 
     @Override
