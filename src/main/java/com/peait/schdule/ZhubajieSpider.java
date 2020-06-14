@@ -46,9 +46,6 @@ public class ZhubajieSpider implements PageProcessor {
         if (title != null && !title.isEmpty()) {
             //*[@class="item-value value desc J-task-desc beforeSuccess"]/text()
             String body = page.getHtml().xpath("//*[@class=\"item-value value desc J-task-desc beforeSuccess\"]/text()").toString();
-            System.out.println(title);
-            System.out.println(body);
-            System.out.println(page.getUrl());
             if (!title.contains("logo") && !title.contains("LOGO")) {
                 TerraceSpider terraceSpider1 = terraceSpiderMapper.selectByPrimaryKey(page.getUrl().toString());
                 if (terraceSpider1 == null) {
