@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import com.peait.entity.TerraceSpider;
 import com.peait.mail.SendEmailService;
 import com.peait.mapper.TerraceSpiderMapper;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -46,37 +47,35 @@ public class ZhubajieSpider implements PageProcessor {
         if (title != null && !title.isEmpty()) {
             //*[@class="item-value value desc J-task-desc beforeSuccess"]/text()
             String body = page.getHtml().xpath("//*[@class=\"item-value value desc J-task-desc beforeSuccess\"]/text()").toString();
-            if (title.contains("logo") || title.contains("LOGO") || title.contains("广告设计")|| title.contains("PPT")|| title.contains("服务")
-                    || title.contains("推广")|| title.contains("设计")|| title.contains("剪辑")|| title.contains("UI")|| title.contains("运营")
-                    || title.contains("摄影")|| title.contains("宣传片")|| title.contains("字幕")|| title.contains("3D")|| title.contains("AI")
-                    || title.contains("招聘")|| title.contains("淘宝")|| title.contains("网红")|| title.contains("美工")|| title.contains("保险")
-                    || title.contains("拍摄")|| title.contains("打字")|| title.contains("编剧") || title.contains("FLASH")
+            if (title.contains("网站") || title.contains("网页") || title.contains("程序")|| title.contains("前端")
+                    || title.contains("后端")|| title.contains("小程序")|| title.contains("APP")|| title.contains("java")
+                    || title.contains("JAVA")|| title.contains("Java")|| title.contains("定制")|| title.contains("页面")
+                    || title.contains("开发")
             ) {
-                System.out.println("过滤=="+title);
-            }else {
                 TerraceSpider terraceSpider1 = terraceSpiderMapper.selectByPrimaryKey(page.getUrl().toString());
                 if (terraceSpider1 == null) {
-                      TerraceSpider terraceSpider = new TerraceSpider();
-                      terraceSpider.setId(page.getUrl().toString());
-                      terraceSpider.setIsSend((byte) 0);
-                      terraceSpider.setTerraceName("zbj");
-                      terraceSpider.setProjectTitle(title);
-                      terraceSpider.setProjectDescription(body);
-                      terraceSpiderMapper.insertSelective(terraceSpider);
-                      sendEmailService.getEmail();
+                    TerraceSpider terraceSpider = new TerraceSpider();
+                    terraceSpider.setId(page.getUrl().toString());
+                    terraceSpider.setIsSend((byte) 0);
+                    terraceSpider.setTerraceName("zbj");
+                    terraceSpider.setProjectTitle(title);
+                    terraceSpider.setProjectDescription(body);
+                    terraceSpiderMapper.insertSelective(terraceSpider);
+                    sendEmailService.getEmail();
                 }
             }
-
         }
         page.addTargetRequests(all);
     }
+
+
 
     @Override
     public Site getSite() {
         return site;
     }
 
-//    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void schdule() {
         Spider.create(this)
                 //从"https://github.com/code4craft"开始抓
